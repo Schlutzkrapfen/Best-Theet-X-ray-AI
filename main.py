@@ -38,7 +38,6 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
     if not results or len(results[0].boxes) <= 0:
         print(f"No detections for {input}")
         return
-    show_results(results)
 
     results[0].save(os.path.join(output_folder, "images/", os.path.basename(input)))
 
@@ -86,10 +85,6 @@ def make_folder_structer(output_folder: str, delete_files: bool = True):
     os.makedirs(output_folder, exist_ok=True)
     os.makedirs(labels_path, exist_ok=True)
     os.makedirs(os.path.join(output_folder, "images"), exist_ok=True)
-
-
-def show_results(results):
-    results[0].show()
 
 
 def main():
