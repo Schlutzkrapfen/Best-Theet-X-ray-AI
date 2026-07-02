@@ -15,9 +15,10 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
     output_folder is path where the picture will be stored
     """
     yolo_model = YOLO(model)
-    save_path = os.path.join(output_folder, os.path.basename(input))
+    filename, _ = os.path.splitext(os.path.basename(input))
+    save_path = os.path.join(output_folder, f"{filename}.txt")
     results: list[ultralytics.engine.results.Results] = yolo_model(input, save_txt=None)
-    with open(save_path, "+w") as file:
+    with open(os.path.join(save_path, ".txt"), "+w") as file:
         for idx, prediction in enumerate(
             results[0].boxes.xywhn
         ):  # change final attribute to desired box format
@@ -27,7 +28,7 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
                 f"{cls} {prediction[0].item()} {prediction[1].item()} {prediction[2].item()} {prediction[3].item()}\n"
             )
 
-    if not results or len(results[0].boxes) == 0:
+    if not results or len(results[0].boxes) <= 0:
         print(f"No detections for {input}")
         return
     show_results(results)
