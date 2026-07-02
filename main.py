@@ -18,7 +18,7 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
     filename, _ = os.path.splitext(os.path.basename(input))
     save_path = os.path.join(output_folder, f"{filename}.txt")
     results: list[ultralytics.engine.results.Results] = yolo_model(input, save_txt=None)
-    with open(os.path.join(save_path, ".txt"), "+w") as file:
+    with open(save_path) as file:
         for idx, prediction in enumerate(
             results[0].boxes.xywhn
         ):  # change final attribute to desired box format
