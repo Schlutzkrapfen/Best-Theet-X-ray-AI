@@ -1,10 +1,11 @@
 import os
 
+import ultralytics
 from ultralytics import YOLO
 
-INPUT_FOLDER = "./Images"
-MODEL_FOLDER = "./Ai_Models"
-RESULT_FOLDER = "./Results"
+INPUT_FOLDER: str = "./Images"
+MODEL_FOLDER: str = "./Ai_Models"
+RESULT_FOLDER: str = "./Results"
 
 
 def try_Ai(model: str, input: str, output_folder: str = "./Results"):
@@ -14,7 +15,21 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
     output_folder is path where the picture will be stored
     """
     yolo_model = YOLO(model)
-    results = yolo_model(input)
+    save_path = os.path.join(output_folder, os.path.basename(input))
+    results: list[ultralytics.engine.results.Results] = yolo_model(input, save_txt=None)
+    with open(save_path, "+w") as file:
+        for idx, prediction in enumerate(
+            results[0].boxes.xywhn
+        ):  # change final attribute to desired box format
+            cls = int(results[0].boxes.cls[idx].item())
+            # Write line to file in YOLO label format : cls x y w h
+            file.write(
+                f"{cls} {prediction[0].item()} {prediction[1].item()} {prediction[2].item()} {prediction[3].item()}\n"
+            )
+
+    if not results or len(results[0].boxes) == 0:
+        print(f"No detections for {input}")
+        return
     show_results(results)
     os.makedirs(output_folder, exist_ok=True)
     results[0].save(os.path.join(output_folder, os.path.basename(input)))
