@@ -64,6 +64,8 @@ def get_correct_cls(names: dict, cls: int, classes_txt: str) -> int:
 
     with open(classes_txt, "rt") as myfile:
         for i, myline in enumerate(myfile):
+            print(f" {myline.strip()} + {str(names[cls])} ")
+
             if myline.strip() == str(names[cls]):
                 print(i)
                 return i
