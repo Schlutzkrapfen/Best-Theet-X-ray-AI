@@ -44,7 +44,15 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
 
 
 def make_classes_file(names: dict, output_folder: str) -> str:
+
     save_path: str = os.path.join(output_folder, "classes.txt")
+
+    if os.path.isfile(save_path):
+        with open(save_path, "rt") as myfile:
+            existing = {line.strip() for line in myfile}
+
+        # remove entries from names whose value is already in the file
+        names = {idx: name for idx, name in names.items() if name not in existing}
     with open(save_path, "a") as file:
         for idx in sorted(names.keys()):
             file.write(f"{names[idx]}\n")
@@ -71,7 +79,7 @@ def make_folder_structer(output_folder: str, delete_files: bool = True):
     Args:
         output_folder (str): Path to the base output folder."""
     labels_path: str = os.path.join(output_folder, "labels")
-    if delete_files:
+    if delete_files and os.path.isfile(os.path.join(output_folder, "classes.txt")):
         for images_file in os.listdir(labels_path):
             os.remove(os.path.join(labels_path, images_file))
         os.remove(os.path.join(output_folder, "classes.txt"))
