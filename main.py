@@ -44,6 +44,7 @@ def try_Ai(yolo_model: YOLO, input: str, output_folder: str = "./Results"):
 def make_classes_file(names: dict, output_folder: str) -> str:
 
     save_path: str = os.path.join(output_folder, "classes.txt")
+    existing: set[str] = set()
 
     if os.path.isfile(save_path):
         with open(save_path, "rt") as myfile:
@@ -53,7 +54,11 @@ def make_classes_file(names: dict, output_folder: str) -> str:
         names = {idx: name for idx, name in names.items() if name not in existing}
     with open(save_path, "a") as file:
         for idx in sorted(names.keys()):
-            file.write(f"{names[idx]}\n")
+            name = names[idx]
+            if name in existing:
+                continue
+            file.write(f"{name}\n")
+            existing.add(name)
     return save_path
 
 
