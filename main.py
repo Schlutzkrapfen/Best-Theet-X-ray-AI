@@ -8,7 +8,7 @@ MODEL_FOLDER: str = "./Ai_Models"
 RESULT_FOLDER: str = "./Results"
 
 
-def try_Ai(model: str, input: str, output_folder: str = "./Results"):
+def try_Ai(yolo_model: YOLO, input: str, output_folder: str = "./Results"):
     """
     Run YOLO object detection on an image and save the results.
 
@@ -23,7 +23,6 @@ def try_Ai(model: str, input: str, output_folder: str = "./Results"):
         output_folder (str): Folder where the label .txt file and the
             annotated image will be saved. Defaults to "./Results".
     """
-    yolo_model: YOLO = YOLO(model)
     classes_txt = make_classes_file(yolo_model.names, output_folder)
     filename, _ = os.path.splitext(os.path.basename(input))
     save_path: str = os.path.join(output_folder, f"labels/{filename}.txt")
@@ -95,12 +94,14 @@ def main():
         if end != ".pt":
             continue
         model_path = os.path.join(MODEL_FOLDER, model_file)
+        yolo_model: YOLO = YOLO(model_path)
         for image_file in os.listdir(INPUT_FOLDER):
             _, end = os.path.splitext(os.path.basename(image_file))
             if end != ".jpg" and end != ".png":
                 continue
             image_path = os.path.join(INPUT_FOLDER, image_file)
-            try_Ai(model_path, image_path, RESULT_FOLDER)
+            try_Ai(yolo_model, image_path, RESULT_FOLDER)
+        make_classes_file(yolo_model.names, RESULT_FOLDER)
 
 
 if __name__ == "__main__":
