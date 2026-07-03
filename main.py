@@ -95,13 +95,13 @@ def main():
             continue
         model_path = os.path.join(MODEL_FOLDER, model_file)
         yolo_model: YOLO = YOLO(model_path)
+        make_classes_file(yolo_model.names, RESULT_FOLDER)
         for image_file in os.listdir(INPUT_FOLDER):
             _, end = os.path.splitext(os.path.basename(image_file))
             if end != ".jpg" and end != ".png":
                 continue
             image_path = os.path.join(INPUT_FOLDER, image_file)
             try_Ai(yolo_model, image_path, RESULT_FOLDER)
-        make_classes_file(yolo_model.names, RESULT_FOLDER)
 
 
 if __name__ == "__main__":
