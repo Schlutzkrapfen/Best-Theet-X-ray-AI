@@ -49,9 +49,6 @@ def make_classes_file(names: dict, output_folder: str) -> str:
     if os.path.isfile(save_path):
         with open(save_path, "rt") as myfile:
             existing = {line.strip() for line in myfile}
-
-        # remove entries from names whose value is already in the file
-        names = {idx: name for idx, name in names.items() if name not in existing}
     with open(save_path, "a") as file:
         for idx in sorted(names.keys()):
             name = names[idx]
