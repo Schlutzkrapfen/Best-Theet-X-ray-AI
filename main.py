@@ -52,9 +52,10 @@ def make_classes_file(names: dict, output_folder: str) -> str:
     with open(save_path, "a") as file:
         for idx in sorted(names.keys()):
             name = names[idx]
-            if name in existing:
+            if name.strip() in existing:
                 continue
             file.write(f"{name}\n")
+
             existing.add(name)
     return save_path
 
